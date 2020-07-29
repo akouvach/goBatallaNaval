@@ -1,1 +1,1 @@
-web: ./bin/gobatallanaval
+web: .\bin\gobatallanaval.exe
