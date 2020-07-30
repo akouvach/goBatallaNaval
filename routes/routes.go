@@ -1,40 +1,65 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/akouvach/gobatallanaval/data"
 	"github.com/gorilla/mux"
 )
 
-// NewRouter sirve para crear un router GorillaMux
+// NewRouter crea un router de gorilla mux
 func NewRouter() *mux.Router {
 
-	router := mux.NewRouter().StrictSlash(true)
+	r := mux.NewRouter().StrictSlash(true)
 
-	// Choose the folder to serve
-	staticDir := "/"
-
-	// Create the route
-	router.
-		PathPrefix(staticDir).
-		Handler(http.StripPrefix(staticDir, http.FileServer(http.Dir("./static"+staticDir))))
-
-	return router
-
-	// r := mux.NewRouter()
-	// r.HandleFunc("/", middleware.AuthRequired(indexGetHandler)).Methods("GET")
-	// r.HandleFunc("/", middleware.AuthRequired(indexPostHandler)).Methods("POST")
-	// r.HandleFunc("/login", loginGetHandler).Methods("GET")
-	// r.HandleFunc("/login", loginPostHandler).Methods("POST")
-	// r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
-	// r.HandleFunc("/register", registerGetHandler).Methods("GET")
-	// r.HandleFunc("/register", registerPostHandler).Methods("POST")
-	// fs := http.FileServer(http.Dir("./static/"))
-	// r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
-	// r.HandleFunc("/{username}",
-	// 	middleware.AuthRequired(userGetHandler)).Methods("GET")
-	// return r
+	r.HandleFunc("/search/{searchTerm}", Search).Methods("GET")
+	r.HandleFunc("/load/{dataId}", Load).Methods("GET")
+	r.HandleFunc("/canales/{canal}", Canales).Methods("GET")
+	r.HandleFunc("/data", MisCanales).Methods("GET")
+	return r
 }
+
+// MisCanales se utiliza para buscar algo
+func MisCanales(w http.ResponseWriter, r *http.Request) {
+	rdo := data.Abrir()
+	fmt.Fprintf(w, "Mis canales %v \n", rdo)
+
+}
+
+// Search se utiliza para buscar algo
+func Search(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Search \n")
+
+}
+
+// Load se utiliza para buscar algo
+func Load(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Load \n")
+}
+
+// Canales se utiliza para buscar algo
+func Canales(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	canal := vars["canal"]
+
+	fmt.Fprintf(w, "Canal: %s \n", canal)
+
+}
+
+// r := mux.NewRouter()
+// r.HandleFunc("/", middleware.AuthRequired(indexGetHandler)).Methods("GET")
+// r.HandleFunc("/", middleware.AuthRequired(indexPostHandler)).Methods("POST")
+// r.HandleFunc("/login", loginGetHandler).Methods("GET")
+// r.HandleFunc("/login", loginPostHandler).Methods("POST")
+// r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
+// r.HandleFunc("/register", registerGetHandler).Methods("GET")
+// r.HandleFunc("/register", registerPostHandler).Methods("POST")
+// fs := http.FileServer(http.Dir("./static/"))
+// r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+// r.HandleFunc("/{username}",
+// 	middleware.AuthRequired(userGetHandler)).Methods("GET")
+// return r
 
 // func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 // 	updates, err := models.GetAllUpdates()
